@@ -8,4 +8,4 @@ const db = new sqlite3.Database('biblioteca_db', (erro) =>{
     }
 })
 
-export default db;
+export default db

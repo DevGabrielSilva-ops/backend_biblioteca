@@ -21,7 +21,7 @@ function criarUsuarioRepository(novoUsuario){
             if(err){
                 rej(err)
             } else {
-                res({message: 'Usuário Criado!'})
+                res({id: this.lastID, ...novoUsuario})
             }
         }
         )
