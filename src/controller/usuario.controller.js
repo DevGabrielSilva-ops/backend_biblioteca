@@ -11,6 +11,16 @@ async function criarUsuarioController (req, res) {
     }
 }
 
+async function deletarUsuarioController (req,res) {
+    const id = req.params.id
+    try {
+      const usuarioDeletado = await usuarioServices.deletarUsuarioService(id)
+      res.status(200).send('Usuário deletado com sucesso!')
+    } catch (e) {
+      res.status(400).send(e.message)
+    }
+}
+
 
 async function listarUsuariosController(req, res) {
   try {
@@ -42,5 +52,6 @@ async function alterarUsuarioController(req,res) {
 export default {
     criarUsuarioController,
     listarUsuariosController,
-    alterarUsuarioController
+    alterarUsuarioController,
+    deletarUsuarioController
 }

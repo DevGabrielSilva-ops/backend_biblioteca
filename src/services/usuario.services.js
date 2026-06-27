@@ -21,6 +21,11 @@ async function listarUsuariosService() {
   return usuarios
 }
 
+async function deletarUsuarioService(id) {
+    const usuarioDeletado = await usuarioRepository.deletarUsuarioRepository(id)
+    return usuarioDeletado
+}
+
 async function alterarUsuarioService(id,nome) {
     const procurarUsuarioNome = await usuarioRepository.procurarUsuarioPorNomeRepository(nome)
      if(procurarUsuarioNome) {
@@ -42,5 +47,6 @@ async function alterarUsuarioService(id,nome) {
 export default {
     criarUsuarioService,
     listarUsuariosService,
-    alterarUsuarioService
+    alterarUsuarioService,
+    deletarUsuarioService
 }

@@ -8,7 +8,7 @@ const db = await mysql2.createConnection({
 })
 
 if(!db){
-    throw new Error (`Não foi possivel a conexão com o banco`)
+    console.log(`Não foi possivel a conexão com o banco`)
 } else {
     console.log("Conexão com o banco bem suceedida!!")
 }

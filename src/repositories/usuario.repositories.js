@@ -67,10 +67,21 @@ async function alterarUsuariosRepository(id,nome) {
   return rows
 }
 
+async function deletarUsuarioRepository(id){
+    const [rows] = await db.execute(
+      `DELETE FROM usuario
+       WHERE id = ? `,
+       [id]
+    )
+
+    return rows
+}
+
 export default {
   criarUsuarioRepository,
   procurarUsuarioPorEmailRepository,
   listarUsuariosRepository,
   alterarUsuariosRepository,
-  procurarUsuarioPorNomeRepository
+  procurarUsuarioPorNomeRepository,
+  deletarUsuarioRepository
 }
