@@ -30,6 +30,48 @@ function criarUsuarioRepository(novoUsuario){
     })
 }
 
+function procurarUsuarioPorEmailRepository(email){
+    return new Promise ((res,rej) => {
+        
+
+        db.get(
+            `SELECT id,nome_usuario,email,avatar 
+            FROM usuario
+            WHERE email = ?`,
+            
+            [email], 
+            
+            (err,row) => {
+                if(err){
+                    rej(err)
+                } else {
+                    res(row)
+                }
+            }
+
+
+        )
+    })
+}
+
+function listarUsuariosRepository() {
+  return new Promise((res, rej) => {
+    db.all(
+      `SELECT id, nome_usuario, email, avatar FROM usuario`,
+      [],
+      (err, rows) => {
+        if (err) {
+          rej(err)
+        } else {
+          res(rows)
+        }
+      }
+    )
+  })
+}
+
 export default {
-    criarUsuarioRepository
+    criarUsuarioRepository,
+    procurarUsuarioPorEmailRepository,
+    listarUsuariosRepository
 }
