@@ -1,11 +1,16 @@
-import sqlite3 from 'sqlite3'
+import mysql2 from 'mysql2/promise'
 
-const db = new sqlite3.Database('biblioteca_db', (erro) =>{
-    if(erro){
-        console.log(`Erro ao conectar ao banco de dados: ${erro}`)
-    } else {
-        console.log('Conexão ao banco de dados bem suceedida!!')
-    }
+const db = await mysql2.createConnection({
+    host: "localhost",
+    user: "root",
+    password: "admin",
+    database: "biblioteca"
 })
+
+if(!db){
+    throw new Error (`Não foi possivel a conexão com o banco`)
+} else {
+    console.log("Conexão com o banco bem suceedida!!")
+}
 
 export default db

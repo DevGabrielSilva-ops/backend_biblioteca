@@ -24,7 +24,23 @@ async function listarUsuariosController(req, res) {
     })
   }
 }
+
+async function alterarUsuarioController(req,res) {
+    try{
+      const id = req.params.id
+      const {nome} = req.body
+
+      const usuarioAlterado = await usuarioServices.alterarUsuarioService(id,nome)
+       res.status(200).send({message: "Usuário alterado", nome} )
+
+    } catch (e){
+      res.status(400).send({
+        message: e.message
+      })
+    }
+}
 export default {
     criarUsuarioController,
-    listarUsuariosController
+    listarUsuariosController,
+    alterarUsuarioController
 }

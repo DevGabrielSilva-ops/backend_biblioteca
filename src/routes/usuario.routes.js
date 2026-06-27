@@ -4,5 +4,6 @@ const router = Router()
 
 router.post('/usuarios', usuarioController.criarUsuarioController )
 router.get('/usuarios', usuarioController.listarUsuariosController)
+router.put('/usuarios/:id', usuarioController.alterarUsuarioController)
 
 export default router

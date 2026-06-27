@@ -1,77 +1,76 @@
-import { resolve } from 'node:dns'
 import db from '../config/db.js'
 
-db.run(`
-    CREATE TABLE IF NOT EXISTS usuario(
-        id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-        nome_usuario TEXT UNIQUE NOT NULL,
-        email TEXT NOT NULL,
-        senha TEXT NOT NULL,
-        avatar TEXT
-    )
-    `)
+await db.execute(`
+  CREATE TABLE IF NOT EXISTS usuario (
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    nome_usuario VARCHAR(300) UNIQUE NOT NULL,
+    email VARCHAR(300) UNIQUE NOT NULL,
+    senha VARCHAR(300) NOT NULL,
+    avatar VARCHAR(300)
+  )
+`)
 
-function criarUsuarioRepository(novoUsuario){
-    return new Promise ((res,rej) => {
-        const { nome_usuario, email, senha, avatar} = novoUsuario
-        db.run(
-            `INSERT INTO usuario (nome_usuario,email,senha,avatar) VALUES (?,?,?,?)`,
-            [nome_usuario, email, senha, avatar],
-            (err) => {
-            if(err){
-                rej(err)
-            } else {
-                res({id: this.lastID, ...novoUsuario})
-            }
-        }
-        )
+async function criarUsuarioRepository(novoUsuario) {
+  const { nome_usuario, email, senha, avatar } = novoUsuario
 
-        
-    })
+  const [resultado] = await db.execute(
+    `INSERT INTO usuario (nome_usuario, email, senha, avatar)
+     VALUES (?, ?, ?, ?)`,
+    [nome_usuario, email, senha, avatar]
+  )
+
+  return {
+    id: resultado.insertId,
+    ...novoUsuario
+  }
 }
 
-function procurarUsuarioPorEmailRepository(email){
-    return new Promise ((res,rej) => {
-        
+async function procurarUsuarioPorEmailRepository(email) {
+  const [rows] = await db.execute(
+    `SELECT id, nome_usuario, email, avatar
+     FROM usuario
+     WHERE email = ?`,
+    [email]
+  )
 
-        db.get(
-            `SELECT id,nome_usuario,email,avatar 
-            FROM usuario
-            WHERE email = ?`,
-            
-            [email], 
-            
-            (err,row) => {
-                if(err){
-                    rej(err)
-                } else {
-                    res(row)
-                }
-            }
-
-
-        )
-    })
+  return rows[0]
 }
 
-function listarUsuariosRepository() {
-  return new Promise((res, rej) => {
-    db.all(
-      `SELECT id, nome_usuario, email, avatar FROM usuario`,
-      [],
-      (err, rows) => {
-        if (err) {
-          rej(err)
-        } else {
-          res(rows)
-        }
-      }
-    )
-  })
+async function procurarUsuarioPorNomeRepository(nome) {
+  const [rows] = await db.execute(
+    `SELECT id, nome_usuario, email, avatar
+     FROM usuario
+     WHERE nome_usuario = ?`,
+    [nome]
+  )
+
+  return rows[0]
+}
+
+async function listarUsuariosRepository() {
+  const [rows] = await db.execute(
+    `SELECT id, nome_usuario, email, avatar
+     FROM usuario`
+  )
+
+  return rows
+}
+
+async function alterarUsuariosRepository(id,nome) {
+  const [rows] = await db.execute(
+    `UPDATE usuario
+    SET nome_usuario = ?
+    WHERE id = ?`,
+    [nome,id]
+  )
+
+  return rows
 }
 
 export default {
-    criarUsuarioRepository,
-    procurarUsuarioPorEmailRepository,
-    listarUsuariosRepository
+  criarUsuarioRepository,
+  procurarUsuarioPorEmailRepository,
+  listarUsuariosRepository,
+  alterarUsuariosRepository,
+  procurarUsuarioPorNomeRepository
 }

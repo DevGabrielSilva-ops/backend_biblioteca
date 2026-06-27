@@ -21,7 +21,26 @@ async function listarUsuariosService() {
   return usuarios
 }
 
+async function alterarUsuarioService(id,nome) {
+    const procurarUsuarioNome = await usuarioRepository.procurarUsuarioPorNomeRepository(nome)
+     if(procurarUsuarioNome) {
+        throw new Error("Já existe um usuário com esse username")
+        
+    }
+    console.log(procurarUsuarioNome)
+    const usuarioAlterado = await usuarioRepository.alterarUsuariosRepository(id,nome)
+    
+    
+   
+    if(!usuarioAlterado) {
+        throw new Error("Não foi possivel alterar o usuario");     
+    } 
+
+    return usuarioAlterado
+}
+
 export default {
     criarUsuarioService,
-    listarUsuariosService
+    listarUsuariosService,
+    alterarUsuarioService
 }
