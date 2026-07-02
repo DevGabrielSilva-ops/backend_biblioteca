@@ -22,18 +22,36 @@ async function listarUsuariosService() {
 }
 
 async function deletarUsuarioService(id) {
+    
+    const usuarioId = await usuarioRepository.procurarUsuarioPorIdRepository(id)
+
+    if(!usuarioId){
+        throw new Error ("Esse usuário não existe")
+    }  
+
     const usuarioDeletado = await usuarioRepository.deletarUsuarioRepository(id)
     return usuarioDeletado
 }
 
-async function alterarUsuarioService(id,nome) {
-    const procurarUsuarioNome = await usuarioRepository.procurarUsuarioPorNomeRepository(nome)
+async function alterarUsuarioService(id,novoUsuario) {
+    const procurarUsuarioNome = await usuarioRepository.procurarUsuarioPorNomeRepository(novoUsuario.nome)
+    const procurarUsuarioId = await usuarioRepository.procurarUsuarioPorIdRepository(id)
+
+    if(!procurarUsuarioId){
+        throw new Error("Esse usuário não existe")
+    }
+    
      if(procurarUsuarioNome) {
         throw new Error("Já existe um usuário com esse username")
         
     }
-    console.log(procurarUsuarioNome)
-    const usuarioAlterado = await usuarioRepository.alterarUsuariosRepository(id,nome)
+    
+    if(novoUsuario.senha){
+        novoUsuario.senha = await bcrypt.hash(novoUsuario.senha,10)
+    }
+    
+    const usuarioAlterado = await usuarioRepository.alterarUsuariosRepository(id,novoUsuario)
+    
     
     
    
@@ -44,9 +62,16 @@ async function alterarUsuarioService(id,nome) {
     return usuarioAlterado
 }
 
+async function listarUsuariosPorIdService(id) {
+    const usuarios = await usuarioRepository.procurarUsuarioPorIdRepository(id)
+    if(!usuarios) throw new Error('Usuário não encontrado')
+    return usuarios
+}
+
 export default {
     criarUsuarioService,
     listarUsuariosService,
     alterarUsuarioService,
-    deletarUsuarioService
+    deletarUsuarioService,
+    listarUsuariosPorIdService
 }

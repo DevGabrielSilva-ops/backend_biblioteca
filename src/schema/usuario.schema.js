@@ -7,4 +7,10 @@ const usuarioSchema = z.object({
     avatar: z.string().url('Url Invalida').optional()
 })
 
-export { usuarioSchema };
+const usuarioIdSchema = z.object({
+    id: z.coerce.number().int().positive('O id digitado não é valido')
+})
+
+
+
+export { usuarioSchema, usuarioIdSchema};

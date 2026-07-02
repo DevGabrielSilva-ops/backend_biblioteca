@@ -1,3 +1,4 @@
+import { json } from 'zod';
 import usuarioServices from '../services/usuario.services.js'
 
 async function criarUsuarioController (req, res) {
@@ -7,7 +8,7 @@ async function criarUsuarioController (req, res) {
         const user = await usuarioServices.criarUsuarioService(novoUsuario)
         res.status(201).send({user})
     } catch (e) {
-        res.status(400).send(e.message)
+      return  res.status(400).send(e.message)
     }
 }
 
@@ -17,7 +18,20 @@ async function deletarUsuarioController (req,res) {
       const usuarioDeletado = await usuarioServices.deletarUsuarioService(id)
       res.status(200).send('Usuário deletado com sucesso!')
     } catch (e) {
-      res.status(400).send(e.message)
+     return res.status(400).send(e.message)
+    }
+}
+
+
+
+
+async function listarUsuariosPorIdController(req,res) {
+  const id = req.params.id  
+  try{
+      const usuarios = await usuarioServices.listarUsuariosPorIdService(id)
+     return res.status(200).send({usuarios})
+    } catch (e) {
+      return res.status(400).send(e.message)
     }
 }
 
@@ -38,13 +52,12 @@ async function listarUsuariosController(req, res) {
 async function alterarUsuarioController(req,res) {
     try{
       const id = req.params.id
-      const {nome} = req.body
-
-      const usuarioAlterado = await usuarioServices.alterarUsuarioService(id,nome)
-       res.status(200).send({message: "Usuário alterado", nome} )
+      const novoUsuario = req.body
+      const usuarioAlterado = await usuarioServices.alterarUsuarioService(id,novoUsuario)
+       res.status(200).send({message: "Usuario Alterado com sucesso", id, novoUsuario} )
 
     } catch (e){
-      res.status(400).send({
+     return res.status(400).send({
         message: e.message
       })
     }
@@ -53,5 +66,6 @@ export default {
     criarUsuarioController,
     listarUsuariosController,
     alterarUsuarioController,
-    deletarUsuarioController
+    deletarUsuarioController,
+    listarUsuariosPorIdController
 }

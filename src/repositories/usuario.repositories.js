@@ -47,6 +47,16 @@ async function procurarUsuarioPorNomeRepository(nome) {
   return rows[0]
 }
 
+async function procurarUsuarioPorIdRepository(id) {
+  const [rows] = await db.execute(
+    `SELECT id, nome_usuario, email, avatar FROM usuario 
+     WHERE id = ?`,
+    [id]
+  )
+
+  return rows[0]
+}
+
 async function listarUsuariosRepository() {
   const [rows] = await db.execute(
     `SELECT id, nome_usuario, email, avatar
@@ -56,12 +66,13 @@ async function listarUsuariosRepository() {
   return rows
 }
 
-async function alterarUsuariosRepository(id,nome) {
+async function alterarUsuariosRepository(id,novoUsuario) {
+  const {nome,email,senha,avatar} = novoUsuario
   const [rows] = await db.execute(
     `UPDATE usuario
-    SET nome_usuario = ?
+    SET nome_usuario = ?, email = ?, senha = ?, avatar = ?
     WHERE id = ?`,
-    [nome,id]
+    [nome,email,senha,avatar,id]
   )
 
   return rows
@@ -77,11 +88,13 @@ async function deletarUsuarioRepository(id){
     return rows
 }
 
+
 export default {
   criarUsuarioRepository,
   procurarUsuarioPorEmailRepository,
   listarUsuariosRepository,
   alterarUsuariosRepository,
   procurarUsuarioPorNomeRepository,
-  deletarUsuarioRepository
+  deletarUsuarioRepository,
+  procurarUsuarioPorIdRepository
 }
